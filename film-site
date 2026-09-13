@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>FilmHub — Фільми та серіали</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0d0d0d;
+    color: white;
+}
+
+header {
+    background: #181818;
+    padding: 25px;
+    text-align: center;
+}
+
+.logo {
+    font-size: 32px;
+    font-weight: bold;
+    color: #ff3333;
+}
+
+.search {
+    margin-top: 20px;
+    width: 90%;
+    max-width: 500px;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 30px auto;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+.movies {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+}
+
+.movie {
+    background: #191919;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.movie:hover {
+    transform: translateY(-5px);
+}
+
+.poster {
+    height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #333, #111);
+    font-size: 60px;
+}
+
+.info {
+    padding: 15px;
+}
+
+.info h3 {
+    margin: 0 0 8px;
+}
+
+.year {
+    color: #aaa;
+}
+
+.rating {
+    color: #ffd000;
+    margin: 8px 0;
+}
+
+button {
+    width: 100%;
+    padding: 11px;
+    border: none;
+    border-radius: 7px;
+    background: #e50914;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #b20710;
+}
+
+footer {
+    margin-top: 50px;
+    padding: 25px;
+    text-align: center;
+    background: #181818;
+    color: #888;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">🎬 FilmHub</div>
+
+    <p>Фільми та серіали в одному місці</p>
+
+    <input
+        class="search"
+        type="text"
+        id="search"
+        placeholder="🔎 Пошук фільму..."
+        onkeyup="searchMovies()"
+    >
+
+</header>
+
+<div class="container" id="popular">
+
+<h2>🔥 Популярні фільми</h2>
+<div class="filters" id="genres"><button class="filter active" onclick="setGenre('all',this)">Усі</button><button class="filter" onclick="setGenre('fantasy',this)">Фантастика</button><button class="filter" onclick="setGenre('action',this)">Екшн</button><button class="filter" onclick="setGenre('adventure',this)">Пригоди</button></div>
+
+<div class="movies">
+
+    <div class="movie" data-genre="fantasy" data-title="INTERSTELLAR">
+        <div class="poster">🎬<div class="poster-title">INTERSTELLAR</div></div>
+        <div class="info">
+            <h3>Інтерстеллар</h3>
+            <div class="year">2014</div>
+            <div class="rating">⭐ 8.7</div>
+            <button onclick="openMovie('Інтерстеллар','2014','8.7','Фантастика','Дослідники вирушають у космічну подорож крізь червоточину, щоб знайти новий дім для людства.')">
+                ▶ Дивитися
+            </button>
+        </div>
+    </div>
+
+    <div class="movie" data-genre="action" data-title="THE DARK KNIGHT">
+        <div class="poster">🦇<div class="poster-title">THE DARK KNIGHT</div></div>
+        <div class="info">
+            <h3>Темний лицар</h3>
+            <div class="year">2008</div>
+            <div class="rating">⭐ 9.0</div>
+            <button onclick="openMovie('Темний лицар','2008','9.0','Екшн','Бетмен протистоїть небезпечному злочинцю Джокеру, який кидає місто у хаос.')">
+                ▶ Дивитися
+            </button>
+        </div>
+    </div>
+
+    <div class="movie" data-genre="action" data-title="SPIDER-MAN">
+        <div class="poster">🕷️<div class="poster-title">SPIDER-MAN</div></div>
+        <div class="info">
+            <h3>Людина-павук</h3>
+            <div class="year">2002</div>
+            <div class="rating">⭐ 7.4</div>
+            <button onclick="openMovie('Людина-павук','2002','7.4','Екшн • Фантастика','Після укусу генетично зміненого павука Пітер Паркер отримує надзвичайні здібності.')">
+                ▶ Дивитися
+            </button>
+        </div>
+    </div>
+
+    <div class="movie" data-genre="fantasy" data-title="THE MARTIAN">
+        <div class="poster">🚀<div class="poster-title">THE MARTIAN</div></div>
+        <div class="info">
+            <h3>Марсіанин</h3>
+            <div class="year">2015</div>
+            <div class="rating">⭐ 8.0</div>
+            <button onclick="openMovie('Марсіанин','2015','8.0','Фантастика • Пригоди','Астронавт залишається сам на Марсі та намагається вижити й повернутися додому.')">
+                ▶ Дивитися
+            </button>
+        </div>
+    </div>
+
+    <div class="movie" data-genre="adventure" data-title="JURASSIC WORLD">
+        <div class="poster">🦖<div class="poster-title">JURASSIC WORLD</div></div>
+        <div class="info">
+            <h3>Світ Юрського періоду</h3>
+            <div class="year">2015</div>
+            <div class="rating">⭐ 6.9</div>
+            <button onclick="openMovie('Світ Юрського періоду','2015','6.9','Пригоди • Фантастика','У парку з динозаврами відбувається аварія, після якої небезпечна істота опиняється на волі.')">
+                ▶ Дивитися
+            </button>
+        </div>
+    </div>
+
+    <div class="movie" data-genre="action" data-title="TERMINATOR">
+        <div class="poster">🤖<div class="poster-title">TERMINATOR</div></div>
+        <div class="info">
+            <h3>Термінатор</h3>
+            <div class="year">1984</div>
+            <div class="rating">⭐ 8.1</div>
+            <button onclick="openMovie('Термінатор','1984','8.1','Екшн • Фантастика','Кіборг із майбутнього прибуває в минуле, щоб змінити долю людства.')">
+                ▶ Дивитися
+            </button>
+        </div>
+    </div>
+
+<div class="movie" data-genre="fantasy" data-title="ПОЧАТОК"><div class="poster" style="background:linear-gradient(135deg,#7f1d1d,#171717 55%,#111827)"><div class="poster-title">INCEPTION</div></div><div class="info"><h3>Початок</h3><div class="meta"><span>2010</span><span class="rating">⭐ 8.8</span></div><button onclick="openMovie('Початок','2010','8.8','Фантастика • Драма','Команда професіоналів проникає у сни, щоб викрасти або змінити ідею.')">▶ Дивитися</button></div></div>
+<div class="movie" data-genre="adventure" data-title="ВОЛОДАР ПЕРСНІВ"><div class="poster" style="background:linear-gradient(135deg,#0c4a6e,#172554 55%,#020617)"><div class="poster-title">THE LORD OF THE RINGS</div></div><div class="info"><h3>Володар перснів</h3><div class="meta"><span>2001</span><span class="rating">⭐ 8.9</span></div><button onclick="openMovie('Володар перснів','2001','8.9','Пригоди • Фентезі','Група героїв вирушає в небезпечну подорож, щоб знищити могутній перстень.')">▶ Дивитися</button></div></div></div>
+</div>
+<section class="container" id="about"><h2>ℹ️ Про FilmHub</h2><p style="color:#999;line-height:1.7">Твій власний кінокаталог. Тут можна додавати нові фільми, трейлери, описи та легальні посилання на перегляд.</p></section>
+<div class="modal" id="movieModal"><div class="modal-content"><button class="modal-close" onclick="closeMovie()">×</button><h2 id="modalTitle"></h2><p id="modalInfo" class="rating"></p><p id="modalDescription"></p><button onclick="alert('Тут можна додати легальне посилання на перегляд або трейлер.')">▶ Перейти до перегляду</button></div></div><footer>
+    © 2026 FilmHub
+</footer>
+
+<script>
+let currentGenre="all";
+function filterMovies(){
+ const q=document.getElementById("search").value.toLowerCase().trim(); let count=0;
+ document.querySelectorAll(".movie").forEach(m=>{
+  const text=m.innerText.toLowerCase(), okText=text.includes(q), okGenre=currentGenre==="all"||m.dataset.genre===currentGenre;
+  m.style.display=okText&&okGenre?"block":"none"; if(okText&&okGenre)count++;
+ });
+}
+function setGenre(g,b){currentGenre=g;document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));b.classList.add("active");filterMovies();}
+function searchMovies(){filterMovies();}
+function openMovie(name,year,rating,genre,description){
+ const params = new URLSearchParams({
+   name: name || "",
+   year: year || "",
+   rating: rating || "",
+   genre: genre || "",
+   description: description || ""
+ });
+ window.location.href = "movie.html?" + params.toString();
+}
+function closeMovie(){document.getElementById("movieModal").style.display="none";}
+window.onclick=e=>{if(e.target===document.getElementById("movieModal"))closeMovie()};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeMovie()});
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FilmHub — Фільм</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#0b0b0f;color:#fff}
+header{background:#121218;padding:18px 7%;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:28px;font-weight:800;color:#e50914}
+.back{color:#fff;text-decoration:none;background:#22222b;padding:10px 16px;border-radius:10px}
+main{max-width:900px;margin:50px auto;padding:20px}
+.card{background:#15151d;border-radius:18px;padding:35px;box-shadow:0 10px 40px #0008}
+h1{font-size:42px;margin:0 0 15px}
+.meta{color:#ccc;font-size:18px;margin-bottom:25px}
+.desc{color:#ddd;font-size:18px;line-height:1.7}
+.watch{display:inline-block;margin-top:25px;background:#e50914;color:white;text-decoration:none;padding:14px 24px;border-radius:10px;font-weight:bold}
+.note{margin-top:30px;color:#999;font-size:14px}
+@media(max-width:600px){main{margin:20px auto}.card{padding:25px}h1{font-size:32px}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">FilmHub</div>
+<a class="back" href="index.html">← Назад</a>
+</header>
+<main>
+<div class="card">
+<h1 id="title">Фільм</h1>
+<div class="meta" id="meta"></div>
+<p class="desc" id="description"></p>
+<a class="watch" href="#" id="watch">▶ Перейти до перегляду</a>
+<div class="note">На цій сторінці можна додати легальне посилання на трейлер або сервіс, де фільм доступний для перегляду.</div>
+</div>
+</main>
+<script>
+const p = new URLSearchParams(location.search);
+const name = p.get("name") || "Фільм";
+const year = p.get("year") || "";
+const rating = p.get("rating") || "";
+const genre = p.get("genre") || "";
+const description = p.get("description") || "Опис фільму буде додано пізніше.";
+document.getElementById("title").textContent=name;
+document.getElementById("meta").textContent=(year ? year+" • " : "")+(rating ? "⭐ "+rating+" • " : "")+genre;
+document.getElementById("description").textContent=description;
+document.getElementById("watch").onclick=e=>{
+ e.preventDefault();
+ alert("Додай сюди легальне посилання на перегляд або трейлер.");
+};
+document.title="FilmHub — "+name;
+</script>
+</body>
+</html>
