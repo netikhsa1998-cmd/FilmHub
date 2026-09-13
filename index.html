@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FilmHub — Фільми та серіали</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#0d0d0d;color:#fff}
+header{background:#181818;padding:25px;text-align:center;position:sticky;top:0;z-index:100;border-bottom:1px solid #292929}
+header h1{margin:0 0 15px;font-size:32px;color:#e50914}
+.search{width:90%;max-width:600px;padding:13px 18px;border:none;border-radius:8px;background:#292929;color:#fff;font-size:16px;outline:none}
+.search::placeholder{color:#999}
+.container{width:95%;max-width:1200px;margin:30px auto}
+.categories{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:25px}
+.categories button{background:#252525;color:#fff;border:none;padding:10px 18px;border-radius:20px;cursor:pointer;transition:.2s}
+.categories button:hover,.categories button.active{background:#e50914}
+.movies{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:20px}
+.movie{background:#181818;border-radius:10px;overflow:hidden;cursor:pointer;transition:.25s;border:1px solid #252525}
+.movie:hover{transform:translateY(-5px);border-color:#e50914}
+.poster{width:100%;height:270px;object-fit:cover;display:block;background:#222}
+.movie-info{padding:13px}.movie-title{font-size:18px;font-weight:bold;margin-bottom:8px}
+.movie-meta{color:#aaa;font-size:14px;line-height:1.5}.rating{color:#ffd700}
+.description{color:#bbb;font-size:13px;margin-top:8px;line-height:1.4}
+.no-results{text-align:center;color:#888;font-size:20px;padding:50px;display:none}
+footer{text-align:center;padding:40px 20px;margin-top:40px;background:#181818;color:#777}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;justify-content:center;align-items:center;padding:20px;z-index:1000}
+.modal-content{background:#181818;width:100%;max-width:850px;max-height:90vh;overflow-y:auto;border-radius:12px;padding:25px;position:relative}
+.close{position:absolute;right:18px;top:12px;font-size:32px;cursor:pointer;color:#aaa}.close:hover{color:#fff}
+.modal-title{font-size:30px;margin:0 40px 15px 0}.modal-meta{color:#aaa;margin-bottom:15px}.modal-description{color:#ccc;line-height:1.6}
+.watch-button{margin-top:20px;padding:13px 25px;background:#e50914;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:16px}.watch-button:hover{background:#b20710}
+.video-container{margin-top:25px;display:none}.video-container video{width:100%;max-height:500px;background:#000;border-radius:8px}
+@media (max-width:600px){header h1{font-size:25px}.movies{grid-template-columns:repeat(2,1fr);gap:12px}.poster{height:220px}.movie-title{font-size:15px}.modal-content{padding:18px}}
+</style>
+</head>
+<body>
+<header>
+<h1>🎬 FilmHub</h1>
+<input type="text" id="search" class="search" placeholder="🔎 Пошук фільмів...">
+</header>
+<div class="container">
+<div class="categories">
+<button class="active" onclick="filterCategory('all',this)">Усі</button>
+<button onclick="filterCategory('Пригоди',this)">Пригоди</button>
+<button onclick="filterCategory('Фентезі',this)">Фентезі</button>
+<button onclick="filterCategory('Фантастика',this)">Фантастика</button>
+<button onclick="filterCategory('Бойовик',this)">Бойовик</button>
+<button onclick="filterCategory('Жахи',this)">Жахи</button>
+<button onclick="filterCategory('Комедія',this)">Комедія</button>
+</div>
+<div id="movies" class="movies"></div>
+<div id="noResults" class="no-results">😔 Нічого не знайдено</div>
+</div>
+<footer>© 2026 FilmHub — Фільми та серіали</footer>
+<div id="modal" class="modal">
+<div class="modal-content">
+<span class="close" onclick="closeMovie()">×</span>
+<h2 id="modalTitle" class="modal-title"></h2>
+<div id="modalMeta" class="modal-meta"></div>
+<p id="modalDescription" class="modal-description"></p>
+<button class="watch-button" onclick="watchMovie()">▶ Дивитися</button>
+<div id="videoContainer" class="video-container">
+<video id="movieVideo" controls><source id="videoSource" src="" type="video/mp4">Ваш браузер не підтримує відео.</video>
+</div>
+</div>
+</div>
+<script src="style.js"></script>
+</body>
+</html>
