@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>FilmHub</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0d0d0d;
+    color: white;
+}
+
+header {
+    background: #181818;
+    padding: 25px;
+    text-align: center;
+}
+
+.logo {
+    font-size: 32px;
+    font-weight: bold;
+    color: #ff3333;
+}
+
+.search {
+    margin-top: 20px;
+    width: 90%;
+    max-width: 500px;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 30px auto;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+.movies {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+}
+
+.movie {
+    background: #191919;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.movie:hover {
+    transform: translateY(-5px);
+}
+
+.poster {
+    height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #333, #111);
+    font-size: 60px;
+}
+
+.info {
+    padding: 15px;
+}
+
+.info h3 {
+    margin: 0 0 8px;
+}
+
+.year {
+    color: #aaa;
+}
+
+.rating {
+    color: #ffd000;
+    margin: 8px 0;
+}
+
+button {
+    width: 100%;
+    padding: 11px;
+    border: none;
+    border-radius: 7px;
+    background: #e50914;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #b20710;
+}
+
+footer {
+    margin-top: 50px;
+    padding: 25px;
+    text-align: center;
+    background: #181818;
+    color: #888;
+}
+
+ .modal {
+     display: none;
+     position: fixed;
+     inset: 0;
+     background: rgba(0,0,0,0.82);
+     z-index: 1000;
+     align-items: center;
+     justify-content: center;
+     padding: 20px;
+ }
+ .modal-content {
+     width: 100%;
+     max-width: 650px;
+     background: #191919;
+     border-radius: 14px;
+     padding: 25px;
+     position: relative;
+     box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+ }
+ .modal-close {
+     position: absolute;
+     top: 10px;
+     right: 15px;
+     width: auto;
+     background: transparent;
+     font-size: 30px;
+     padding: 0 8px;
+ }
+ .modal-close:hover {
+     background: transparent;
+     color: #ff3333;
+ }
+ .modal h2 { margin-top: 0; color: #ff3333; }
+ .modal p { color: #ccc; line-height: 1.6; }
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">🎬 FilmHub</div>
+
+    <p>Фільми та серіали в одному місці</p>
+
+    <input
+        class="search"
+        type="text"
+        id="search"
+        placeholder="🔎 Пошук фільму..."
+        onkeyup="searchMovies()"
+    >
+
+</header>
+
+<div class="container">
+
+<h2>🔥 Популярні фільми</h2>
+
+<div class="movies">
+
+    <div class="movie">
+        <div class="poster" style="background-image:url('https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg');"></div>
+        <div class="info">
+            <h3>Інтерстеллар</h3>
+            <div class="year">2014</div>
+            <div class="rating">⭐ 8.7</div>
+            <button onclick="openMovie('Інтерстеллар')">
+                ▶ Дивитися
+            </button>
+        </div>
+    </div>
+
+    <div class="movie">
+        <div class="poster" style="background-image:url('https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg');"></div>
+        <div class="info">
+            <h3>Темний лицар</h3>
+            <div class="year">2008</div>
+            <div class="rating">⭐ 9.0</div>
+            <button onclick="openMovie('Темний лицар')">
+                ▶ Дивитися
+            </button>
+        </div>
+    </div>
+
+    <div class="movie">
+        <div class="poster" style="background-image:url('https://image.tmdb.org/t/p/w500/5weKuP4FhZt6G5W9uK5l8r9s7x2.jpg');"></div>
+        <div class="info">
+            <h3>Людина-павук</h3>
+            <div class="year">2002</div>
+            <div class="rating">⭐ 7.4</div>
+            <button onclick="openMovie('Людина-павук')">
+                ▶ Дивитися
+            </button>
+        </div>
+    </div>
+
+    <div class="movie">
+        <div class="poster" style="background-image:url('https://image.tmdb.org/t/p/w500/5aGhaIHYuQbqlHWvWYqMCnj40y2.jpg');"></div>
+        <div class="info">
+            <h3>Марсіанин</h3>
+            <div class="year">2015</div>
+            <div class="rating">⭐ 8.0</div>
+            <button onclick="openMovie('Марсіанин')">
+                ▶ Дивитися
+            </button>
+        </div>
+    </div>
+
+    <div class="movie">
+        <div class="poster" style="background-image:url('https://image.tmdb.org/t/p/w500/rFhY4F2j2uX4W6J8p0V7r9n3m5q.jpg');"></div>
+        <div class="info">
+            <h3>Світ Юрського періоду</h3>
+            <div class="year">2015</div>
+            <div class="rating">⭐ 6.9</div>
+            <button onclick="openMovie('Світ Юрського періоду')">
+                ▶ Дивитися
+            </button>
+        </div>
+    </div>
+
+    <div class="movie">
+        <div class="poster" style="background-image:url('https://image.tmdb.org/t/p/w500/qvktm0BHcnmDpul4Hz01GIazWPr.jpg');"></div>
+        <div class="info">
+            <h3>Термінатор</h3>
+            <div class="year">1984</div>
+            <div class="rating">⭐ 8.1</div>
+            <button onclick="openMovie('Термінатор')">
+                ▶ Дивитися
+            </button>
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+
+<div class="modal" id="movieModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeMovie()">×</button>
+        <h2 id="modalTitle"></h2>
+        <p id="modalInfo"></p>
+        <p id="modalDescription"></p>
+        <button onclick="alert('Тут можна додати легальне посилання на перегляд.')">
+            ▶ Перейти до перегляду
+        </button>
+    </div>
+</div>
+
+<footer>
+    © 2026 FilmHub
+</footer>
+
+<script>
+
+function searchMovies() {
+
+    let input = document
+        .getElementById("search")
+        .value
+        .toLowerCase();
+
+    let movies = document
+        .querySelectorAll(".movie");
+
+    movies.forEach(function(movie) {
+
+        let title = movie
+            .querySelector("h3")
+            .innerText
+            .toLowerCase();
+
+        if (title.includes(input)) {
+            movie.style.display = "block";
+        } else {
+            movie.style.display = "none";
+        }
+
+    });
+}
+
+ function openMovie(name) {
+     const movies = {
+         "Інтерстеллар": ["2014 • ⭐ 8.7", "Команда астронавтів вирушає крізь космос у пошуках нового дому для людства."],
+         "Темний лицар": ["2008 • ⭐ 9.0", "Бетмен стикається з небезпечним противником, який прагне занурити місто в хаос."],
+         "Людина-павук": ["2002 • ⭐ 7.4", "Після незвичайного укусу Пітер Паркер отримує надзвичайні здібності."],
+         "Марсіанин": ["2015 • ⭐ 8.0", "Астронавт залишається один на Марсі та намагається вижити й повернутися додому."],
+         "Світ Юрського періоду": ["2015 • ⭐ 6.9", "У парку динозаврів експеримент виходить з-під контролю."],
+         "Термінатор": ["1984 • ⭐ 8.1", "Кіборг із майбутнього прибуває в минуле, щоб змінити долю людства."]
+     };
+     const movie = movies[name] || ["", "Інформація про фільм."];
+     document.getElementById("modalTitle").innerText = name;
+     document.getElementById("modalInfo").innerText = movie[0];
+     document.getElementById("modalDescription").innerText = movie[1];
+     document.getElementById("movieModal").style.display = "flex";
+ }
+
+ function closeMovie() {
+     document.getElementById("movieModal").style.display = "none";
+ }
+
+ window.onclick = function(event) {
+     const modal = document.getElementById("movieModal");
+     if (event.target === modal) closeMovie();
+ }
+</script>
+
+</body>
+</html>
