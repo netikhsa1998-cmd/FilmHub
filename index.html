@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FilmHub — Фільми та серіали</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0d0d0d;
+    color: white;
+}
+
+header {
+    background: #181818;
+    padding: 25px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid #292929;
+}
+
+header h1 {
+    margin: 0 0 15px;
+    font-size: 32px;
+    color: #e50914;
+}
+
+.search {
+    width: 90%;
+    max-width: 600px;
+    padding: 13px 18px;
+    border: none;
+    border-radius: 8px;
+    background: #292929;
+    color: white;
+    font-size: 16px;
+    outline: none;
+}
+
+.search::placeholder {
+    color: #999;
+}
+
+.container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 30px auto;
+}
+
+.categories {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.categories button {
+    background: #252525;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.categories button:hover,
+.categories button.active {
+    background: #e50914;
+}
+
+.movies {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 20px;
+}
+
+.movie {
+    background: #181818;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.25s;
+    border: 1px solid #252525;
+}
+
+.movie:hover {
+    transform: translateY(-5px);
+    border-color: #e50914;
+}
+
+.poster {
+    width: 100%;
+    height: 270px;
+    object-fit: cover;
+    display: block;
+}
+
+.movie-info {
+    padding: 13px;
+}
+
+.movie-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.movie-meta {
+    color: #aaa;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.rating {
+    color: #ffd700;
+}
+
+.description {
+    color: #bbb;
+    font-size: 13px;
+    margin-top: 8px;
+    line-height: 1.4;
+}
+
+.no-results {
+    text-align: center;
+    color: #888;
+    font-size: 20px;
+    padding: 50px;
+    display: none;
+}
+
+footer {
+    text-align: center;
+    padding: 40px 20px;
+    margin-top: 40px;
+    background: #181818;
+    color: #777;
+}
+
+/* Вікно фільму */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #181818;
+    width: 100%;
+    max-width: 850px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 12px;
+    padding: 25px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    right: 18px;
+    top: 12px;
+    font-size: 32px;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.close:hover {
+    color: white;
+}
+
+.modal-title {
+    font-size: 30px;
+    margin: 0 40px 15px 0;
+}
+
+.modal-meta {
+    color: #aaa;
+    margin-bottom: 15px;
+}
+
+.modal-description {
+    color: #ccc;
+    line-height: 1.6;
+}
+
+.watch-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 13px 25px;
+    background: #e50914;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.watch-button:hover {
+    background: #b20710;
+}
+
+.video-container {
+    margin-top: 25px;
+    display: none;
+}
+
+.video-container video {
+    width: 100%;
+    max-height: 500px;
+    background: black;
+    border-radius: 8px;
+}
+
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 25px;
+    }
+
+    .movies {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .poster {
+        height: 220px;
+    }
+
+    .movie-title {
+        font-size: 15px;
+    }
+
+    .modal-content {
+        padding: 18px;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+    <h1>🎬 FilmHub</h1>
+
+```
+<input
+    type="text"
+    id="search"
+    class="search"
+    placeholder="🔎 Пошук фільмів..."
+>
+```
+
+</header>
+
+<div class="container">
+
+```
+<div class="categories">
+    <button class="active" onclick="filterCategory('all', this)">Усі</button>
+    <button onclick="filterCategory('Пригоди', this)">Пригоди</button>
+    <button onclick="filterCategory('Фентезі', this)">Фентезі</button>
+    <button onclick="filterCategory('Фантастика', this)">Фантастика</button>
+    <button onclick="filterCategory('Бойовик', this)">Бойовик</button>
+    <button onclick="filterCategory('Жахи', this)">Жахи</button>
+    <button onclick="filterCategory('Комедія', this)">Комедія</button>
+</div>
+
+<div id="movies" class="movies"></div>
+
+<div id="noResults" class="no-results">
+    😔 Нічого не знайдено
+</div>
+```
+
+</div>
+
+<footer>
+    © 2026 FilmHub — Фільми та серіали
+</footer>
+
+<!-- Вікно фільму -->
+
+<div id="modal" class="modal">
+
+```
+<div class="modal-content">
+
+    <span class="close" onclick="closeMovie()">×</span>
+
+    <h2 id="modalTitle" class="modal-title"></h2>
+
+    <div id="modalMeta" class="modal-meta"></div>
+
+    <p id="modalDescription" class="modal-description"></p>
+
+    <button class="watch-button" onclick="watchMovie()">
+        ▶ Дивитися
+    </button>
+
+    <div id="videoContainer" class="video-container">
+        <video id="movieVideo" controls>
+            <source id="videoSource" src="" type="video/mp4">
+            Ваш браузер не підтримує відео.
+        </video>
+    </div>
+
+</div>
+```
+
+</div>
+
+<script>
+
+const movies = [
+
+    {
+        title: "Володар перснів",
+        year: 2001,
+        rating: 8.9,
+        category: "Пригоди",
+        genres: "Пригоди • Фентезі",
+        poster: "images/lord.jpg",
+        description: "Група героїв вирушає в небезпечну подорож, щоб знищити могутній перстень.",
+        video: "videos/lord.mp4"
+    },
+
+    {
+        title: "Аватар",
+        year: 2009,
+        rating: 7.8,
+        category: "Фантастика",
+        genres: "Фантастика • Пригоди",
+        poster: "images/avatar.jpg",
+        description: "Людина потрапляє на далеку планету Пандора та стає частиною її дивовижного світу.",
+        video: "videos/avatar.mp4"
+    },
+
+    {
+        title: "Інтерстеллар",
+        year: 2014,
+        rating: 8.7,
+        category: "Фантастика",
+        genres: "Фантастика • Драма",
+        poster: "images/interstellar.jpg",
+        description: "Група астронавтів вирушає крізь космос у пошуках нового дому для людства.",
+        video: "videos/interstellar.mp4"
+    },
+
+    {
+        title: "Месники",
+        year: 2012,
+        rating: 8.0,
+        category: "Бойовик",
+        genres: "Бойовик • Фантастика",
+        poster: "images/avengers.jpg",
+        description: "Наймогутніші герої Землі об'єднуються, щоб врятувати планету.",
+        video: "videos/avengers.mp4"
+    },
+
+    {
+        title: "Воно",
+        year: 2017,
+        rating: 7.3,
+        category: "Жахи",
+        genres: "Жахи • Трилер",
+        poster: "images/it.jpg",
+        description: "Група дітей стикається зі страшною істотою, яка ховається під виглядом клоуна.",
+        video: "videos/it.mp4"
+    },
+
+    {
+        title: "Один вдома",
+        year: 1990,
+        rating: 7.7,
+        category: "Комедія",
+        genres: "Комедія • Сімейний",
+        poster: "images/homealone.jpg",
+        description: "Хлопчик залишається сам удома та захищає свій будинок від грабіжників.",
+        video: "videos/homealone.mp4"
+    }
+
+];
+
+
+const moviesContainer = document.getElementById("movies");
+const searchInput = document.getElementById("search");
+const noResults = document.getElementById("noResults");
+
+let currentCategory = "all";
+
+
+function renderMovies() {
+
+    const searchText = searchInput.value.toLowerCase();
+
+    const filteredMovies = movies.filter(movie => {
+
+        const matchesSearch =
+            movie.title.toLowerCase().includes(searchText);
+
+        const matchesCategory =
+            currentCategory === "all" ||
+            movie.category === currentCategory;
+
+        return matchesSearch && matchesCategory;
+    });
+
+
+    moviesContainer.innerHTML = "";
+
+
+    if (filteredMovies.length === 0) {
+
+        noResults.style.display = "block";
+
+        return;
+    }
+
+
+    noResults.style.display = "none";
+
+
+    filteredMovies.forEach((movie, index) => {
+
+        const card = document.createElement("div");
+
+        card.className = "movie";
+
+        card.onclick = function() {
+            openMovie(movie);
+        };
+
+
+        card.innerHTML = `
+
+            <img
+                class="poster"
+                src="${movie.poster}"
+                alt="${movie.title}"
+                onerror="this.src='https://via.placeholder.com/300x450/181818/ffffff?text=No+Poster'"
+            >
+
+            <div class="movie-info">
+
+                <div class="movie-title">
+                    ${movie.title}
+                </div>
+
+                <div class="movie-meta">
+                    ${movie.year}
+                    •
+                    <span class="rating">⭐ ${movie.rating}</span>
+                    •
+                    ${movie.category}
+                </div>
+
+                <div class="description">
+                    ${movie.description}
+                </div>
+
+            </div>
+
+        `;
+
+
+        moviesContainer.appendChild(card);
+
+    });
+
+}
+
+
+function filterCategory(category, button) {
+
+    currentCategory = category;
+
+    document
+        .querySelectorAll(".categories button")
+        .forEach(btn => btn.classList.remove("active"));
+
+    button.classList.add("active");
+
+    renderMovies();
+
+}
+
+
+searchInput.addEventListener("input", renderMovies);
+
+
+function openMovie(movie) {
+
+    document.getElementById("modalTitle").textContent =
+        movie.title;
+
+    document.getElementById("modalMeta").innerHTML =
+        `${movie.year} • ⭐ ${movie.rating} • ${movie.genres}`;
+
+    document.getElementById("modalDescription").textContent =
+        movie.description;
+
+    document.getElementById("videoSource").src =
+        movie.video;
+
+    document.getElementById("movieVideo").load();
+
+    document.getElementById("videoContainer").style.display =
+        "none";
+
+    document.getElementById("modal").style.display =
+        "flex";
+
+}
+
+
+function closeMovie() {
+
+    document.getElementById("modal").style.display =
+        "none";
+
+    const video = document.getElementById("movieVideo");
+
+    video.pause();
+
+}
+
+
+function watchMovie() {
+
+    const videoContainer =
+        document.getElementById("videoContainer");
+
+    videoContainer.style.display = "block";
+
+    const video =
+        document.getElementById("movieVideo");
+
+    video.play().catch(() => {});
+
+}
+
+
+document.getElementById("modal").addEventListener("click", function(event) {
+
+    if (event.target === this) {
+        closeMovie();
+    }
+
+});
+
+
+renderMovies();
+
+</script>
+
+</body>
+</html>
